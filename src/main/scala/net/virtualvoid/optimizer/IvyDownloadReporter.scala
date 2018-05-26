@@ -17,18 +17,15 @@
 
 package net.virtualvoid.optimizer
 
-import java.io.{File, FileOutputStream, InputStream}
+import java.io.{ File, InputStream }
 import java.net.URL
-import java.util.concurrent.Callable
 
 import org.apache.ivy.util.CopyProgressListener
 import org.apache.ivy.util.url.URLHandler.URLInfo
-import org.apache.ivy.util.url.{URLHandler, URLHandlerRegistry}
-import sbt.{State, Keys, Command, Action, seq}
-import xsbti._
+import org.apache.ivy.util.url.{ URLHandler, URLHandlerRegistry }
+import sbt.{ Command, Keys, State }
 
-import scala.util.{Failure, Success, Try}
-import scala.util.control.NonFatal
+import scala.util.{ Failure, Success, Try }
 
 trait DownloadListener {
   def downloadOccurred(download: NetworkAccess): Unit
@@ -55,8 +52,8 @@ object IvyDownloadReporter {
 
   val reportDownloadsCommand: Command = Command.command("report-downloads")(reportDownloadsAction)
 
-  def install() = seq(
-    Keys.initialize <<= (Keys.initialize, Keys.ivySbt) { (_, ivy) ⇒
+  def install() = Seq(
+    Keys.initialize := Keys.ivySbt map { _ ⇒
       def replaceDefault(default: URLHandler): Unit =
         default match {
           case i: IvyDownloadReporter ⇒
@@ -70,8 +67,7 @@ object IvyDownloadReporter {
 
       replaceDefault(URLHandlerRegistry.getDefault)
     },
-    Keys.commands += reportDownloadsCommand
-  )
+    Keys.commands += reportDownloadsCommand)
 
   def printTracingReport(traceEntries: Seq[NetworkAccess]): Unit = {
     def totalBytes(entries: Seq[NetworkAccess]): Long =

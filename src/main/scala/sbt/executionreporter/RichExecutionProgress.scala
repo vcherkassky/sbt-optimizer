@@ -20,10 +20,10 @@ package sbt.executionreporter
 import java.util.concurrent.ConcurrentHashMap
 
 import net.virtualvoid.optimizer._
-import IvyLockReporter.{SpentTimeInLock, Listener}
+import IvyLockReporter.{ Listener, SpentTimeInLock }
 import ExecutionProgressReporter.TaskTiming
-
 import sbt._
+import sbt.internal.TaskName
 
 import scala.annotation.tailrec
 
